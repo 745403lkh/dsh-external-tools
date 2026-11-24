@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "External tools",
+    "description": "DSH rescue and debug entry. The standalone dsh-external-tools.exe runs when DSH crashes or cannot start: diagnose config/plugins/logs, enter safe mode, restore backups, kill hung processes, repair dependencies, and export a diagnostics ZIP. Settings → External tools provides status and toggles inside DSH."
+  }
+}

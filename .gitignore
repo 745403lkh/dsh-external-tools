@@ -1,0 +1,16 @@
+﻿# Windows build outputs
+src-exe/*.exe
+src-exe/*.pdb
+src-exe/obj/
+src-exe/bin/
+src-exe/ui-preview-error.txt
+
+# Local/temporary state
+.tmp-*/
+*-error.txt
+*.log
+npm-cache/
+node_modules/
+Thumbs.db
+Desktop.ini
+.vs/

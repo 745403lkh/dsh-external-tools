@@ -1,0 +1,8 @@
+# dsh-external-tools：外部工具与应急开关
+#
+# 插入一个 Host 插件（插件状态 / 启停接口 + 本地 HTTP 路由）和一个同 id 的
+# Client 模块（左侧栏「外部工具」入口 + main 页面）。三处 id 必须一致：
+# 本文件、package.json 的 name、client.js 里的 NS。
+- insert:
+    - id: dsh-external-tools
+      name: 'dsh-external-tools'
