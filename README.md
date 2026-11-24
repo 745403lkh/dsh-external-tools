@@ -10,7 +10,7 @@ DSH 的**独立急救/调试台**。单个便携 EXE，不加载 DSH、Node 或 
 
 ## 预览
 
-![中文界面](docs/preview-zh.png)
+![中文界面](https://raw.githubusercontent.com/745403lkh/dsh-external-tools/main/docs/preview-zh.png)
 
 ---
 
@@ -272,15 +272,15 @@ MIT。见 [LICENSE](LICENSE)。
 
 ## English
 
+### Preview
+
+![English UI](https://raw.githubusercontent.com/745403lkh/dsh-external-tools/main/docs/preview-en.png)
+
 ### DSH External Tools 1.0.0
 
 A standalone rescue and debug console for DeepSeek Harness. The main entry is the **`dsh-external-tools.exe`** in the repository root: double-click it to run; it does not load DSH, Node, or Electron. Use it when DSH crashes, hangs, or a plugin prevents it from starting: diagnose configuration and logs, enter safe mode, restore backups, stop a stuck process, and repair dependencies.
 
 The EXE runs independently and does not require a DSH plugin. It can be distributed as a single file.
-
-### Preview
-
-![English UI](docs/preview-en.png)
 
 ### Why it exists
 
