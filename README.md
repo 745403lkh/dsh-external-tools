@@ -1,4 +1,4 @@
-# dsh-external-tools：DSH 外部工具
+# dsh-external-tools：DSH 外部工具 / DSH External Tools
 
 **首个正式版：1.0.0**（`package.json` 中为 `1.0.0`）
 
@@ -6,7 +6,7 @@ DSH 的**独立急救/调试台**。单个便携 EXE，不加载 DSH、Node 或 
 
 **独立运行，不依赖 DSH 插件，也不注册 DSH 设置页。** 双击即可运行，可独立分发。
 
-[下载最新版](https://github.com/745403lkh/dsh-external-tools/releases/latest) · [更新日志](CHANGELOG.md) · [1.0.0 发布说明](docs/RELEASE-1.0.0.md) · [MIT](LICENSE)
+[下载最新版](https://github.com/745403lkh/dsh-external-tools/releases/latest) · [更新日志](CHANGELOG.md) · [1.0.0 发布说明](docs/RELEASE-1.0.0.md) · [English](#english) · [MIT](LICENSE)
 
 ## 预览
 
@@ -277,3 +277,66 @@ dsh-external-tools/
 ## 许可
 
 MIT。见 [LICENSE](LICENSE)。
+
+---
+
+## English
+
+### DSH External Tools 1.0.0
+
+A standalone rescue and debug console for DeepSeek Harness. It is one portable Windows EXE; it does not load DSH, Node, or Electron, and it does not require a DSH plugin. Use it when DSH crashes, hangs, or a plugin prevents it from starting.
+
+### What it does
+
+- **Standalone**: one EXE, no installer, service, or background process; copy it, zip it, or share it as-is.
+- **One-click diagnosis**: checks the profile `package.json`, bundle list, dependencies, `cordis.patch.yml`, logs, ports, and DSH processes; produces a copyable report and an exportable diagnostic ZIP.
+- **Safe mode**: keeps only `dsh-base` / `dsh-web-app`, temporarily removes other bundles to isolate a plugin-caused startup failure, and restores the previous list afterward.
+- **Backup and restore**: backs up `package.json` before every write and again before a restore; rotated backups are listed with time and size.
+- **Offline log analysis**: matches port conflicts, missing dependencies, module resolution failures, plugin load errors, and crashes without uploading logs or configuration.
+- **Process control**: shows DSH process count and PIDs; kills a hung process or starts DSH.
+- **Dependency and config repair**: runs `pnpm install --prefer-offline` in the profile, resets a broken `cordis.patch.yml` after a backup, and opens the config / tool / log folders.
+- **Plugin control**: shows display names and package ids, enables or disables plugins, protects core bundles, shows plugin details, and updates third-party plugins through the npm registry with a backup first.
+- **Web DSH**: starts an isolated web profile through the DSH CLI's absolute path, without relying on PATH or `DSH_*` environment variables.
+- **Reinstall entry**: finds the official installer and opens it for an in-place install after checking the current DSH version; it never auto-uninstalls.
+- **Bilingual UI**: Simplified Chinese / English, switched in place without restarting the EXE.
+- **Safety**: backup → write → read-back verification, protected core plugins, no Agent tools, and fully offline log analysis.
+
+### Quick start
+
+1. Download `dsh-external-tools.exe` or the release ZIP.
+2. Put the EXE in any folder and double-click it.
+3. Approve the UAC prompt on an administrator account; standard accounts can still run it.
+4. Open **Diagnosis** first when DSH cannot start, or **Safe mode** if you suspect a plugin.
+5. No DSH plugin, Node, pnpm, or .NET SDK installation is required.
+
+### Modules
+
+- **Plugin control** — names, package ids, versions, enable/disable, details, npm updates.
+- **Safe mode** — keep core bundles only, then restore.
+- **Backup and restore** — restore `package.json` with a safety backup.
+- **Web DSH** — isolated web profile started through the DSH CLI.
+- **Quick diagnosis** — profile, bundles, dependencies, patch, processes, logs.
+- **Log analysis** — offline common-error matching.
+- **Repair tools** — dependencies, patch reset, config/tool/log folders, profile switching.
+- **Reinstall DSH** — locate the official installer and open it after version validation.
+
+### Build
+
+Requirements: Windows 10/11 and .NET Framework 4.x (included with Windows). No .NET SDK, Node, or pnpm is needed.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File src-exe\build.ps1
+```
+
+The build script uses the Windows-bundled `csc.exe` and produces `dsh-external-tools.exe` in the repository root.
+
+### Repository
+
+- GitHub: https://github.com/745403lkh/dsh-external-tools
+- Changelog: [CHANGELOG.md](CHANGELOG.md)
+- Release notes: [docs/RELEASE-1.0.0.md](docs/RELEASE-1.0.0.md)
+- Releasing: [docs/RELEASING.md](docs/RELEASING.md)
+
+### License
+
+MIT. See [LICENSE](LICENSE).
