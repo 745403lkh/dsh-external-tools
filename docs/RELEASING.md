@@ -25,7 +25,7 @@
    - `LICENSE`
    - `docs/preview-zh.png` / `docs/preview-en.png`
 6. GitHub Release：
-   - tag：`v1.0.0-beta.15`（与版本号一致）
+   - tag：`v1.0.0`（与版本号一致）
    - 上传 zip 和 EXE
    - 说明写 CHANGELOG 对应条目
    - 不要上传本地 profile、日志、备份或 `.tmp-*`

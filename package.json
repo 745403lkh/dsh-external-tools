@@ -1,6 +1,6 @@
 ﻿{
     "name":  "dsh-external-tools",
-    "version":  "1.0.0-beta.15",
+    "version":  "1.0.0",
     "private":  true,
     "type":  "module",
     "description":  "Standalone Windows rescue and debug console for DSH: one portable EXE that diagnoses DSH, enters safe mode, restores backups, reads logs, kills hung processes, and repairs dependencies. Does not require DSH, Node, or a DSH plugin to run.",

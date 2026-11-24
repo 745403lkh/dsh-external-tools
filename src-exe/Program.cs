@@ -14,8 +14,8 @@ using Microsoft.Win32;
 [assembly: System.Reflection.AssemblyTitle("DSH 外部工具")]
 [assembly: System.Reflection.AssemblyDescription("DSH rescue and debug console")]
 [assembly: System.Reflection.AssemblyProduct("dsh-external-tools")]
-[assembly: System.Reflection.AssemblyVersion("1.0.0.15")]
-[assembly: System.Reflection.AssemblyFileVersion("1.0.0.15")]
+[assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.0.0")]
 
 namespace DshExternalTools
 {
@@ -83,8 +83,8 @@ namespace DshExternalTools
 
     internal static class Program
     {
-        public const string Version = "1.0.0-beta.15";
-        public const string DisplayVersion = "1.0.0 beta15";
+        public const string Version = "1.0.0";
+        public const string DisplayVersion = "1.0.0";
 
         [STAThread]
         private static int Main(string[] args)

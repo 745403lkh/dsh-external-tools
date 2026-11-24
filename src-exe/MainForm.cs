@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -372,7 +372,7 @@ namespace DshExternalTools
             section.Dock = DockStyle.Fill;
             section.BackColor = Ui.SurfaceFill;
             Ui.Label(section, "工具", 0, 0, 200, 28, 14F, FontStyle.Bold, Ui.Ink, false);
-            Label hint = Ui.Hint(section, "选择模块开始；后续工具会自动加入这里。", 0, 30, 600, 24);
+            Label hint = Ui.Hint(section, L.IsEnglish ? "Choose a tool to start; used tools are added here." : "选择模块开始；后续工具会自动加入这里。", 0, 30, 600, 24);
             hint.TextAlign = ContentAlignment.MiddleLeft;
             layout.Controls.Add(section, 0, 1);
 

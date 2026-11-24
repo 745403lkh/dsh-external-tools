@@ -1,12 +1,12 @@
 # dsh-external-tools：DSH 外部工具
 
-**版本：1.0.0 beta15**（`package.json` 中为 `1.0.0-beta.15`）
+**首个正式版：1.0.0**（`package.json` 中为 `1.0.0`）
 
 DSH 的**独立急救/调试台**。单个便携 EXE，不加载 DSH、Node 或 Electron；DSH 崩溃、卡死、插件导致启动失败时，用它诊断配置和日志、进入安全模式、恢复备份、结束卡死进程、修依赖。
 
 **独立运行，不依赖 DSH 插件，也不注册 DSH 设置页。** 双击即可运行，可独立分发。
 
-[下载最新版](https://github.com/745403lkh/dsh-external-tools/releases/latest) · [更新日志](CHANGELOG.md) · [MIT](LICENSE)
+[下载最新版](https://github.com/745403lkh/dsh-external-tools/releases/latest) · [更新日志](CHANGELOG.md) · [1.0.0 发布说明](docs/RELEASE-1.0.0.md) · [MIT](LICENSE)
 
 ## 预览
 
@@ -271,6 +271,7 @@ dsh-external-tools/
 
 - GitHub：https://github.com/745403lkh/dsh-external-tools
 - 更新日志：[CHANGELOG.md](CHANGELOG.md)
+- 发布说明：[docs/RELEASE-1.0.0.md](docs/RELEASE-1.0.0.md)
 - 发布步骤：[docs/RELEASING.md](docs/RELEASING.md)
 
 ## 许可

@@ -13,7 +13,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-$script:DshxVersion = '1.0.0-beta.15'
+$script:DshxVersion = '1.0.0'
 $script:DefaultBundle = 'dsh-external-tools'
 $script:BackupKeep = 10
 $script:ProtectedBundles = @(
