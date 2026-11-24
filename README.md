@@ -4,7 +4,7 @@
 
 DSH 的**独立急救/调试台**。单个便携 EXE，不加载 DSH、Node 或 Electron；DSH 崩溃、卡死、插件导致启动失败时，用它诊断配置和日志、进入安全模式、恢复备份、结束卡死进程、修依赖。
 
-**独立运行，不依赖 DSH 插件，也不注册 DSH 设置页。** 双击即可运行，可独立分发。
+**独立运行，不依赖 DSH 插件。** 双击即可运行，可独立分发。
 
 [下载最新版](https://github.com/745403lkh/dsh-external-tools/releases/latest) · [更新日志](CHANGELOG.md) · [1.0.0 发布说明](docs/RELEASE-1.0.0.md) · [English](#english) · [MIT](LICENSE)
 
@@ -129,14 +129,6 @@ DSH 的**独立急救/调试台**。单个便携 EXE，不加载 DSH、Node 或 
 | `UnhandledPromiseRejection` / `TypeError` | 插件异步/运行时异常 | 安全模式，更新插件 |
 
 规则在 `src-exe/LogAnalyzer.cs`，可以继续加。分析会显示命中次数、文件、时间和一段样本；不会自动执行修复。
-
----
-
-## 不再提供 DSH 设置页
-
-- 设置页入口已移除，`client.js` 不再注册。
-- 独立 EXE 不依赖 DSH、Node 或任何插件；直接双击或发给别人都能运行。
-- DSH 插件不再提供 UI，也不需要为使用 EXE 而安装。
 
 ---
 
@@ -286,7 +278,7 @@ MIT。见 [LICENSE](LICENSE)。
 
 A standalone rescue and debug console for DeepSeek Harness. The main entry is the **`dsh-external-tools.exe`** in the repository root: double-click it to run; it does not load DSH, Node, or Electron. Use it when DSH crashes, hangs, or a plugin prevents it from starting: diagnose configuration and logs, enter safe mode, restore backups, stop a stuck process, and repair dependencies.
 
-The EXE runs independently, does not require a DSH plugin, and registers no DSH settings page. It can be distributed as a single file.
+The EXE runs independently and does not require a DSH plugin. It can be distributed as a single file.
 
 ### Why it exists
 
@@ -398,11 +390,6 @@ Offline rule matching, not a model call. Common patterns and suggestions:
 
 Rules live in `src-exe/LogAnalyzer.cs` and can be extended. Analysis shows hit count, file, time, and a sample; fixes are never applied automatically.
 
-### No DSH settings page
-
-- The settings entry has been removed; `client.js` is no longer registered.
-- The standalone EXE does not depend on DSH, Node, or any plugin; it can be double-clicked or shared directly.
-- The DSH plugin provides no UI and does not need to be installed to use the EXE.
 
 ### CLI fallback
 
