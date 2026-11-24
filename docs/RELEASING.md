@@ -19,14 +19,12 @@
    dsh-external-tools.exe --ui-preview docs/preview-zh.png 0
    dsh-external-tools.exe --ui-preview docs/preview-en.png 0 en
    ```
-5. 打包：
-   - `dsh-external-tools.exe`
-   - `README.md`
-   - `LICENSE`
-   - `docs/preview-zh.png` / `docs/preview-en.png`
+5. 发布物：
+   - 只发布 `dsh-external-tools.exe`
+   - 仓库已包含 README、LICENSE、预览和 CHANGELOG，不再重复打 ZIP
 6. GitHub Release：
    - tag：`v1.0.0`（与版本号一致）
-   - 上传 zip 和 EXE
+   - 只上传 EXE
    - 说明写 CHANGELOG 对应条目
    - 不要上传本地 profile、日志、备份或 `.tmp-*`
 7. 不提交：

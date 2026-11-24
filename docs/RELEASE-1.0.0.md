@@ -85,7 +85,7 @@
 - 构建验证：使用 Windows 自带 `csc.exe`，不依赖 .NET SDK、Node 或 pnpm。
 ## 安装
 
-1. 下载 `dsh-external-tools.exe` 或 `dsh-external-tools-1.0.0-win-x64.zip`。
+1. 下载 `dsh-external-tools.exe`。
 2. 解压到任意文件夹，双击 EXE。
 3. 管理员账号会看到 UAC 提示；标准账号也能运行。
 4. 不需要安装 DSH 插件，不需要 Node、pnpm 或 .NET SDK。

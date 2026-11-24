@@ -284,51 +284,242 @@ MIT。见 [LICENSE](LICENSE)。
 
 ### DSH External Tools 1.0.0
 
-A standalone rescue and debug console for DeepSeek Harness. It is one portable Windows EXE; it does not load DSH, Node, or Electron, and it does not require a DSH plugin. Use it when DSH crashes, hangs, or a plugin prevents it from starting.
+A standalone rescue and debug console for DeepSeek Harness. The main entry is the **`dsh-external-tools.exe`** in the repository root: double-click it to run; it does not load DSH, Node, or Electron. Use it when DSH crashes, hangs, or a plugin prevents it from starting: diagnose configuration and logs, enter safe mode, restore backups, stop a stuck process, and repair dependencies.
 
-### What it does
+The EXE runs independently, does not require a DSH plugin, and registers no DSH settings page. It can be distributed as a single file.
 
-- **Standalone**: one EXE, no installer, service, or background process; copy it, zip it, or share it as-is.
-- **One-click diagnosis**: checks the profile `package.json`, bundle list, dependencies, `cordis.patch.yml`, logs, ports, and DSH processes; produces a copyable report and an exportable diagnostic ZIP.
-- **Safe mode**: keeps only `dsh-base` / `dsh-web-app`, temporarily removes other bundles to isolate a plugin-caused startup failure, and restores the previous list afterward.
-- **Backup and restore**: backs up `package.json` before every write and again before a restore; rotated backups are listed with time and size.
-- **Offline log analysis**: matches port conflicts, missing dependencies, module resolution failures, plugin load errors, and crashes without uploading logs or configuration.
-- **Process control**: shows DSH process count and PIDs; kills a hung process or starts DSH.
-- **Dependency and config repair**: runs `pnpm install --prefer-offline` in the profile, resets a broken `cordis.patch.yml` after a backup, and opens the config / tool / log folders.
-- **Plugin control**: shows display names and package ids, enables or disables plugins, protects core bundles, shows plugin details, and updates third-party plugins through the npm registry with a backup first.
-- **Web DSH**: starts an isolated web profile through the DSH CLI's absolute path, without relying on PATH or `DSH_*` environment variables.
-- **Reinstall entry**: finds the official installer and opens it for an in-place install after checking the current DSH version; it never auto-uninstalls.
-- **Bilingual UI**: Simplified Chinese / English, switched in place without restarting the EXE.
-- **Safety**: backup → write → read-back verification, protected core plugins, no Agent tools, and fully offline log analysis.
+### Why it exists
+
+Plugins can enhance DSH, but they can also prevent DSH from starting. When DSH cannot open, its Settings, plugin pages, and plugin manager are unavailable.
+
+`dsh-external-tools.exe` reads and writes profile files directly and does not need the DSH runtime:
+
+```text
+<profile>/package.json          → dsh.profile.bundles / dependencies
+<profile>/cordis.patch.yml      → user patch layer
+<profile>/.dsh-external-tools/  → backups, safe-mode records, operation logs
+```
+
+What it can do:
+
+| Scenario | Action in the tool |
+| --- | --- |
+| A plugin seems to prevent DSH from starting | **Repair → Safe mode**: keep only `dsh-base` / `dsh-web-app`, temporarily remove other bundles; restore at any time |
+| A specific plugin is known to be broken | Select it on **Plugins** and disable it; back up before writing and verify after writing |
+| `cordis.patch.yml` was corrupted | **Repair → Reset cordis.patch.yml**: back up first, then write `[]` |
+| Dependencies are missing or `node_modules` is broken | **Repair → Open terminal to repair dependencies**: run `pnpm install --prefer-offline` in the profile |
+| A stuck process remains | **Home / Repair → Stop DSH process** |
+| You want to return to a previous working configuration | **Repair → Backup and restore**: select a `package.json` backup; the current config is backed up again before restoring |
+| You do not know what broke | **Diagnosis**: check JSON, bundle list, dependencies, patch, logs, and processes; **Logs** provides smart analysis |
+| You need someone else to investigate | **Diagnosis → Export diagnostic package**: ZIP with config, patch, logs, bundle list, process list, and report |
 
 ### Quick start
 
-1. Download `dsh-external-tools.exe` or the release ZIP.
-2. Put the EXE in any folder and double-click it.
-3. Approve the UAC prompt on an administrator account; standard accounts can still run it.
-4. Open **Diagnosis** first when DSH cannot start, or **Safe mode** if you suspect a plugin.
-5. No DSH plugin, Node, pnpm, or .NET SDK installation is required.
+1. Double-click:
 
-### Modules
+   ```text
+   dsh-external-tools.exe
+   ```
 
-- **Plugin control** — names, package ids, versions, enable/disable, details, npm updates.
-- **Safe mode** — keep core bundles only, then restore.
-- **Backup and restore** — restore `package.json` with a safety backup.
-- **Web DSH** — isolated web profile started through the DSH CLI.
-- **Quick diagnosis** — profile, bundles, dependencies, patch, processes, logs.
-- **Log analysis** — offline common-error matching.
-- **Repair tools** — dependencies, patch reset, config/tool/log folders, profile switching.
-- **Reinstall DSH** — locate the official installer and open it after version validation.
+2. The home page shows plugin state, DSH process count, backup count, and safe-mode state.
+3. Click **Quick diagnosis** and read the ERROR / WARN items and suggestions on the Diagnosis page.
+4. If DSH cannot start, open **Safe mode** and click **Enter safe mode and start**; if it starts, a plugin is the cause. Return to **Plugin control** and re-enable plugins one by one.
+5. To roll back, open **Backup and restore**.
 
-### Build
+> The EXE is locally built and unsigned. If Windows shows "Unknown publisher" on first launch, choose "More info → Run anyway". It does not access the network or upload configuration; it only reads and writes local profile files.
 
-Requirements: Windows 10/11 and .NET Framework 4.x (included with Windows). No .NET SDK, Node, or pnpm is needed.
+### EXE interface
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File src-exe\build.ps1
+The UI follows a minimal Windows Settings style: light gray surface, white rounded cards, thin borders, line icons, and a single blue accent. The home page is a grid of module cards; click a card to open its module. Every module has **← Back** at the top.
+
+- **Plugin control**: all bundles, filterable, double-click to toggle; shows display names (package id in the tooltip), with **Details / Update plugin / Open folder** at the bottom. Updates use the npm registry and back up `package.json` first; local links and official built-in bundles do not use npm updates.
+- **Safe mode**: keep only the core bundles to determine whether a plugin prevents DSH from starting; also contains patch reset and process actions.
+- **Backup and restore**: list `package.json` backups; back up the current file before restoring.
+- **Quick diagnosis**: profile/JSON, bundle list, dependencies, patch, logs, and processes; every item has a level and suggestion, and the report can be copied or exported as a diagnostic package.
+- **Log analysis**: list `hub.log`, `~/.dsh/logs/*.log`, and others; inspect the last 500 lines; **Smart analysis** covers common errors.
+- **Web DSH**: start an isolated `web` profile through the DSH CLI's absolute path (`DeepSeek Harness.exe + lib/bin.js web --port 0`), without relying on PATH or `DSH_*` environment variables. The web profile keeps its plugins, settings, and sessions separate from desktop.
+- **Repair tools**: pnpm dependency repair, config/log/tool folders, and profile switching.
+- **Reinstall DSH**: only opens the official installer; no automatic uninstall or silent install. Prefers `%LOCALAPPDATA%\@deepseek-aidsh-desktop-updater\installer.exe` and falls back to a file picker.
+- **About**: portable notes, version, paths, protected-plugin list, and license.
+
+#### Language
+
+- Supports **Simplified Chinese / English**, following the system by default.
+- Chinese system → Chinese; English system → English; any other language → Chinese fallback.
+- The language button sits below **About** and always reads **语言/Language**. Its menu contains `Follow system / 简体中文 / English`; selecting an item rebuilds the UI immediately without restarting.
+- English resources are embedded in the EXE, with no external language files. The translation is maintained separately; the main program keeps only the resource integration layer.
+
+#### Icon
+
+- Based on the DeepSeek whale, recolored to light/deep blue with a small gear badge in the lower-right corner.
+- Avoids dark red, dark green, and pure black; ships 16/24/32/48/64/128/256 ICO sizes.
+- `src-exe/make-icon.ps1` regenerates the icon from `whale-base.png`; the build script invokes it automatically when `app.ico` is missing.
+
+#### DSH version validation
+
+- On startup, reads the file version of `DeepSeek Harness.exe` and compares it with the verified series `0.2.2`.
+- Version mismatch: show a startup dialog and **disable the reinstall entry**; the web launcher may still be attempted.
+- DSH not found: show a startup dialog; **reinstall remains available** (useful for installing DSH); the web launcher is unavailable.
+- DSH paths are resolved from `DSH_NODE_EXECUTABLE`, the uninstall registry `InstallLocation`, and common install directories. Launching the standalone EXE from Explorer does not depend on the current shell environment.
+- The version is also shown in the EXE footer and on the About page.
+
+#### Modular extension
+
+Home cards are generated from `ToolModule` implementations under `src-exe/Modules`. To add a tool:
+
+1. Create `XxxModule : ToolModule` and implement `Title` / `Description` / `Category` / `IconId` / `Accent` / `CreateView`.
+2. Add `modules.Add(new XxxModule());` in the `MainForm` constructor.
+3. The home card, module view, refresh, and `--ui-preview` pick it up automatically; no layout changes are needed.
+
+`Ui.cs` provides shared buttons, cards, lists, and read-only text; `ModuleIcon.cs` provides line icons; `ModuleCard.cs` is the home card/status control.
+
+#### Smart log analysis
+
+Offline rule matching, not a model call. Common patterns and suggestions:
+
+| Log signal | Meaning | Suggestion |
+| --- | --- | --- |
+| `Cannot find module` / `ERR_MODULE_NOT_FOUND` | Missing dependency or plugin file | `pnpm install`; use safe mode if it still fails |
+| `ERR_PACKAGE_PATH_NOT_EXPORTED` / `ERR_REQUIRE_ESM` | Incompatible plugin module format | Update/roll back the plugin; confirm with safe mode |
+| `SyntaxError` / `Unexpected token` | Plugin syntax error | Safe mode; re-enable recently added plugins one by one |
+| `EADDRINUSE` / `address already in use` | Port already in use | Stop the stuck DSH process |
+| `EACCES` / `EPERM` | Permission or file access denied | Close duplicate instances/processes and check folder permissions |
+| `ENOENT` | File or directory missing | Repair dependencies; disable/restore a missing plugin |
+| `YAMLException` / `bad indentation` | Broken `cordis.patch.yml` | Reset the patch layer after a backup |
+| `EJSONPARSE` / `is not valid JSON` | Broken JSON configuration | Restore a `package.json` backup |
+| `JavaScript heap out of memory` | Out of memory | Reduce sessions/plugins and restart |
+| `ECONNREFUSED` / `ENOTFOUND` / `ETIMEDOUT` | Network or model endpoint unreachable | Check network/proxy/API address |
+| `401` / `invalid api key` | Authentication failed | Sign in again or update the key |
+| `429` / `rate limit` | Rate limited | Retry later or reduce concurrency |
+| `GPU process` / `GLES` / `Vulkan` | Graphics initialization failed | Update drivers; disable hardware acceleration |
+| `Segmentation fault` / `FATAL ERROR` | Process crash | Update/reinstall DSH; try safe mode |
+| `ERR_DLOPEN_FAILED` / `NODE_MODULE_VERSION` | Native module ABI mismatch | `pnpm rebuild` / reinstall the plugin |
+| `UnhandledPromiseRejection` / `TypeError` | Async or runtime plugin error | Safe mode; update the plugin |
+
+Rules live in `src-exe/LogAnalyzer.cs` and can be extended. Analysis shows hit count, file, time, and a sample; fixes are never applied automatically.
+
+### No DSH settings page
+
+- The settings entry has been removed; `client.js` is no longer registered.
+- The standalone EXE does not depend on DSH, Node, or any plugin; it can be double-clicked or shared directly.
+- The DSH plugin provides no UI and does not need to be installed to use the EXE.
+
+### CLI fallback
+
+The EXE is the main entry; the CLI is useful for scripts or when the EXE cannot start.
+
+```text
+dshx.cmd status  [--profile <name|dir>] [--json]
+dshx.cmd list    [--profile <name|dir>] [--json]
+dshx.cmd disable [plugin] [--profile <…>] [--force] [--json]
+dshx.cmd enable  [plugin] [--profile <…>] [--json]
+dshx.cmd backups [--profile <…>] [--json]
+dshx.cmd where   [--profile <…>]
 ```
 
-The build script uses the Windows-bundled `csc.exe` and produces `dsh-external-tools.exe` in the repository root.
+- Default plugin: `dsh-external-tools`.
+- Default profile: `%DSH_PROFILE_DIR%`; otherwise `%DSH_HOME%\profiles\desktop`; then `%USERPROFILE%\.dsh\profiles\desktop`.
+- Writing is refused while DSH is running (exit code 2) to avoid clobbering the live instance; `--force` skips the check.
+- Backups go to `<profile>\.dsh-external-tools\backups\`; the file is re-read and verified after writing.
+- Protected plugins are refused (exit code 3).
+
+### Security design
+
+1. **Only target fields are changed**: `dsh.profile.bundles`, or the `cordis.patch.yml` reset. Dependencies, other configuration, and plugin folders are untouched.
+2. **Backup before write, verify after write**: keep the latest 10 backups; re-parse and confirm the target state after writing.
+3. **Protected plugins**: `@deepseek-ai/dsh-base`, `dsh-web-app`, `dsh-sdk-app`, `dsh-sdk-minimal`, `dsh-headless`, `dsh-acp-app`, and `dsh-plugin-manager` cannot be disabled.
+4. **Refuse writes while DSH is running**: both the EXE and CLI check for a `DeepSeek Harness` process; force mode requires an explicit UI confirmation.
+5. **Local-only page API**: custom request header, loopback Host, same-origin Origin, no CORS, and a 64 KiB request-body limit.
+6. **No Agent tools**: enabling/disabling plugins and safe mode are user actions, so a model cannot gain the ability to turn off arbitrary plugins.
+7. **The EXE does not access the network**: it only reads/writes local files and starts/stops local processes; log analysis is fully offline.
+
+### Build the EXE
+
+`src-exe/build.ps1` uses the .NET Framework compiler bundled with Windows; no .NET SDK, Node, or DSH is required:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\src-exe\build.ps1
+```
+
+- Sources: `Program.cs` (profile/backup/safe mode/self-test/diagnosis), `MainForm.cs` (module shell), `Ui.cs` (visual foundation/fonts), `ModuleIcon.cs` (line icons), `ModuleCard.cs` (cards/status), `DshEnvironment.cs` (version/web/installer), `L.cs` + `L.en.cs` (bilingual resources), `Modules/*.cs` (tool modules), `LogAnalyzer.cs` (log rules).
+- Output: `dsh-external-tools.exe` in the repository root.
+- Icon: `src-exe/app.ico`; when missing, `make-icon.ps1` generates multiple sizes from `whale-base.png`.
+- Self-test:
+
+  ```powershell
+  .\dsh-external-tools.exe --self-test "C:\Users\<user>\.dsh\profiles\desktop" --out .\self-test.json
+  ```
+
+- Headless diagnosis:
+
+  ```powershell
+  .\dsh-external-tools.exe --diagnose "C:\Users\<user>\.dsh\profiles\desktop" --out .\diagnose.json
+  ```
+
+- UI preview (development; renders a Win11-style window):
+
+  ```powershell
+  .\dsh-external-tools.exe --ui-preview .\ui.png 0
+  ```
+
+### Known limitations
+
+- **Windows only**: the EXE is .NET Framework 4.x WinForms; the CLI fallback is PowerShell. macOS/Linux need separate shells.
+- **Requires .NET Framework 4.x**: included with Windows 10/11; very stripped systems may need it installed.
+- **Configuration changes need a DSH restart**: plugins are not hot-unloaded.
+- **Session database/cache corruption**: currently only reported, not deleted automatically; back up the profile before manual repair.
+- **Log analysis is heuristic**: it matches common patterns, not every stack trace; use full logs and reproduction for final judgment.
+- **Safe mode keeps only base/web-app**: it temporarily disables all optional official bundles and third-party plugins; they are restored on exit.
+- **Unsigned EXE**: SmartScreen or antivirus may warn on first launch.
+- **UI acceptance**: 1060×720 was checked page by page with `--ui-preview`; still verify on your DPI and Windows theme.
+
+### Repository layout
+
+```text
+dsh-external-tools/
+├─ dsh-external-tools.exe   # standalone rescue console (main entry)
+├─ package.json
+├─ cordis.patch.yml
+├─ index.js                 # DSH host: same-origin API
+
+├─ lib/
+│  ├─ profile.js            # profile read/write/backup/verification
+│  ├─ routes.js             # same-origin HTTP routes
+│  └─ open.js               # open EXE/folder/README
+├─ src-exe/
+│  ├─ Program.cs            # profile/backup/safe mode/self-test/diagnosis
+│  ├─ MainForm.cs           # module shell: home cards + module views
+│  ├─ DshEnvironment.cs     # DSH version/web/installer discovery
+│  ├─ L.cs                  # bilingual resources/system language
+│  ├─ L.en.cs               # embedded English dictionary
+│  ├─ whale-base.png        # DeepSeek whale base artwork
+│  ├─ make-icon.ps1         # multi-size whale + gear icon generator
+│  ├─ ToolModule.cs         # tool module base class
+│  ├─ Ui.cs                 # minimal visual foundation (buttons/cards/lists)
+│  ├─ ModuleIcon.cs         # line icons
+│  ├─ ModuleCard.cs         # home card/status control
+│  ├─ Modules/
+│  │  ├─ PluginModule.cs
+│  │  ├─ SafetyModule.cs
+│  │  ├─ BackupModule.cs
+│  │  ├─ DiagnoseModule.cs
+│  │  ├─ LogModule.cs
+│  │  ├─ WebModule.cs
+│  │  ├─ RepairModule.cs
+│  │  ├─ ReinstallModule.cs
+│  │  └─ AboutModule.cs
+│  ├─ LogAnalyzer.cs        # common log rules
+│  ├─ build.ps1             # SDK-free build script
+│  ├─ app.manifest
+│  └─ app.ico
+├─ bin/
+│  ├─ dshx.cmd / dshx.ps1   # CLI fallback
+│  ├─ disable-self.cmd
+│  └─ enable-self.cmd
+├─ locale/{zh,en}.json
+├─ icon.svg
+└─ README.md
+```
 
 ### Repository
 
